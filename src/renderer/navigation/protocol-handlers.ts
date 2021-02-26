@@ -1,4 +1,4 @@
-import { LensProtocolRouterRenderer } from "../protocol-handler/router";
+import { LensProtocolRouterRenderer } from "../protocol-handler";
 import { navigate } from "./helpers";
 
 export function bindProtocolHandlers() {

@@ -1,10 +1,12 @@
 // Navigation (renderer)
 
-import { bindEvents } from "./events";
-import { bindProtocolHandlers } from "./protocol-handlers";
-
 export * from "./history";
 export * from "./helpers";
 
-bindEvents();
-bindProtocolHandlers();
+export async function bindNavigationHandlers() {
+  const { bindEvents } = await import("./events");
+  const { bindProtocolHandlers } = await import("./protocol-handlers");
+
+  bindEvents();
+  bindProtocolHandlers();
+}

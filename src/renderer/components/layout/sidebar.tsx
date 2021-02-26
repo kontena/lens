@@ -27,7 +27,7 @@ import { CustomResources } from "../+custom-resources/custom-resources";
 import { isActiveRoute } from "../../navigation";
 import { isAllowedResource } from "../../../common/rbac";
 import { Spinner } from "../spinner";
-import { ClusterPageMenuRegistration, clusterPageMenuRegistry, clusterPageRegistry, getExtensionPageUrl } from "../../../extensions/registries";
+import { getByPageTarget, getExtensionPageUrl, getRootClusterPageMenus, getTabLayoutRoutes, RegistrationScope } from "../../../extensions/registries";
 import { SidebarNavItem } from "./sidebar-nav-item";
 import { SidebarContext } from "./sidebar-context";
 
@@ -49,14 +49,12 @@ export class Sidebar extends React.Component<Props> {
     }
 
     return Object.entries(crdStore.groups).map(([group, crds]) => {
-      const submenus: TabLayoutRoute[] = crds.map((crd) => {
-        return {
-          title: crd.getResourceKind(),
-          component: CrdList,
-          url: crd.getResourceUrl(),
-          routePath: String(crdResourcesRoute.path),
-        };
-      });
+      const submenus: TabLayoutRoute[] = crds.map(crd => ({
+        title: crd.getResourceKind(),
+        component: CrdList,
+        url: crd.getResourceUrl(),
+        routePath: String(crdResourcesRoute.path),
+      }));
 
       return (
         <SidebarNavItem
@@ -71,43 +69,18 @@ export class Sidebar extends React.Component<Props> {
     });
   }
 
-  getTabLayoutRoutes(menu: ClusterPageMenuRegistration): TabLayoutRoute[] {
-    const routes: TabLayoutRoute[] = [];
-
-    if (!menu.id) {
-      return routes;
-    }
-
-    clusterPageMenuRegistry.getSubItems(menu).forEach((subMenu) => {
-      const subPage = clusterPageRegistry.getByPageTarget(subMenu.target);
-
-      if (subPage) {
-        const { extensionId, id: pageId } = subPage;
-
-        routes.push({
-          routePath: subPage.url,
-          url: getExtensionPageUrl({ extensionId, pageId, params: subMenu.target.params }),
-          title: subMenu.title,
-          component: subPage.components.Page,
-        });
-      }
-    });
-
-    return routes;
-  }
-
   renderRegisteredMenus() {
-    return clusterPageMenuRegistry.getRootItems().map((menuItem, index) => {
-      const registeredPage = clusterPageRegistry.getByPageTarget(menuItem.target);
-      const tabRoutes = this.getTabLayoutRoutes(menuItem);
+    return getRootClusterPageMenus().map((menuItem, index) => {
+      const registeredPage = getByPageTarget(menuItem.target, new Set([RegistrationScope.CLUSTER]));
+      const tabRoutes = getTabLayoutRoutes(menuItem);
       const id = `registered-item-${index}`;
       let pageUrl: string;
       let isActive = false;
 
       if (registeredPage) {
-        const { extensionId, id: pageId } = registeredPage;
+        const { extensionName, id: pageId } = registeredPage;
 
-        pageUrl = getExtensionPageUrl({ extensionId, pageId, params: menuItem.target.params });
+        pageUrl = getExtensionPageUrl({ extensionName, pageId, params: menuItem.target.params });
         isActive = isActiveRoute(registeredPage.url);
       } else if (tabRoutes.length > 0) {
         pageUrl = tabRoutes[0].url;

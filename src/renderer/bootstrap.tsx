@@ -18,6 +18,7 @@ import { filesystemProvisionerStore } from "../main/extension-filesystem";
 import { App } from "./components/app";
 import { LensApp } from "./lens-app";
 import { themeStore } from "./theme.store";
+import { bindNavigationHandlers } from "./navigation";
 
 type AppComponent = React.ComponentType & {
   init?(): Promise<void>;
@@ -33,6 +34,7 @@ export {
 };
 
 export async function bootstrap(App: AppComponent) {
+  await bindNavigationHandlers();
   const rootElem = document.getElementById("app");
 
   rootElem.classList.toggle("is-mac", isMac);
