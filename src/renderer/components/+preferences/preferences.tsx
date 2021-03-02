@@ -112,7 +112,7 @@ export class Preferences extends React.Component {
 
     return (
       <PageLayout showOnTop className="Preferences" header={header}>
-        <h2>Color Theme</h2>
+        <h2 id="color-theme">Color Theme</h2>
         <Select
           options={this.themeOptions}
           value={preferences.colorTheme}
@@ -192,10 +192,10 @@ export class Preferences extends React.Component {
         </small>
 
         <div className="extensions flex column gaps">
-          {appPreferenceRegistry.getItems().map(({ title, components: { Hint, Input } }, index) => {
+          {appPreferenceRegistry.getItems().map(({ title, id, components: { Hint, Input } }, index) => {
             return (
               <div key={index} className="preference">
-                <h2>{title}</h2>
+                <h2 id={id}>{title}</h2>
                 <Input/>
                 <small className="hint">
                   <Hint/>

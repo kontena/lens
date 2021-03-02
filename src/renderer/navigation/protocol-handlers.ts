@@ -10,10 +10,13 @@ import { navigate } from "./helpers";
 export function bindProtocolHandlers() {
   LensProtocolRouterRenderer
     .getInstance<LensProtocolRouterRenderer>()
-    .addInternalHandler("/preferences", () => {
-      navigate(preferencesURL());
+    .addInternalHandler("/preferences", ({ search: { highlight }}) => {
+      navigate(preferencesURL({ fragment: highlight }));
     })
     .addInternalHandler("/landing", () => {
+      navigate(landingURL());
+    })
+    .addInternalHandler("/", () => {
       navigate(landingURL());
     })
     .addInternalHandler("/cluster", () => {
