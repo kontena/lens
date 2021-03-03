@@ -1,3 +1,4 @@
+jest.clearAllMocks();
 jest.mock("../../../../common/ipc");
 
 import React from "react";
