@@ -4,10 +4,10 @@ import { extensionsURL } from "../components/+extensions";
 import { landingURL } from "../components/+landing-page";
 import { preferencesURL } from "../components/+preferences";
 import { clusterViewURL } from "../components/cluster-manager/cluster-view.route";
-import { LensProtocolRouterRenderer } from "../protocol-handler/router";
-import { navigate } from "./helpers";
+import { LensProtocolRouterRenderer } from "./router";
+import { navigate } from "../navigation/helpers";
 
-export function bindProtocolHandlers() {
+export function bindAppHandlers() {
   LensProtocolRouterRenderer
     .getInstance<LensProtocolRouterRenderer>()
     .addInternalHandler("/preferences", ({ search: { highlight }}) => {
