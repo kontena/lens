@@ -7,7 +7,7 @@ import { clusterViewURL } from "../components/cluster-manager/cluster-view.route
 import { LensProtocolRouterRenderer } from "./router";
 import { navigate } from "../navigation/helpers";
 
-export function bindAppHandlers() {
+export function bindProtocolAddRouteHandlers() {
   LensProtocolRouterRenderer
     .getInstance<LensProtocolRouterRenderer>()
     .addInternalHandler("/preferences", ({ search: { highlight }}) => {
